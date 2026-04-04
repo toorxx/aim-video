@@ -11,4 +11,6 @@ SEQUENCE_TYPE_MAP = {
     'list(aim.text)': 'texts',
     'aim.distribution': 'distributions',
     'aim.figure': 'figures',
+    'aim.video': 'videos',
+    'list(aim.video)': 'videos',
 }
