@@ -4,7 +4,7 @@ WORKDIR /ui
 COPY aim/web/ui/package.json aim/web/ui/yarn.lock* ./
 RUN mkdir -p public && npm install --legacy-peer-deps
 COPY aim/web/ui/ ./
-RUN echo "SKIP_PREFLIGHT_CHECK=true" > .env && npx react-app-rewired --max_old_space_size=4096 build
+RUN echo "SKIP_PREFLIGHT_CHECK=true" > .env && NODE_OPTIONS=--openssl-legacy-provider npx react-app-rewired --max_old_space_size=4096 build
 
 # Stage 2: Python + aim with custom UI
 FROM python:3.10
