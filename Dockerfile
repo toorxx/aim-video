@@ -1,8 +1,8 @@
 # Stage 1: Build the custom UI from source
 FROM node:16 AS ui-builder
 WORKDIR /ui
-COPY aim/web/ui/package.json aim/web/ui/yarn.lock* ./
-RUN mkdir -p public && npm install --legacy-peer-deps
+COPY aim/web/ui/package.json aim/web/ui/package-lock.json ./
+RUN mkdir -p public && npm ci --legacy-peer-deps
 COPY aim/web/ui/ ./
 RUN echo "SKIP_PREFLIGHT_CHECK=true" > .env && npx react-app-rewired --max_old_space_size=4096 build
 
