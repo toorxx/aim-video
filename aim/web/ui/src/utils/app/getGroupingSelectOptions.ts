@@ -11,7 +11,7 @@ export default function getGroupingSelectOptions({
   params: string[];
   runProps?: string[];
   contexts?: string[];
-  sequenceName?: null | 'metric' | 'images' | 'audios';
+  sequenceName?: null | 'metric' | 'images' | 'audios' | 'videos';
 }): IGroupingSelectOption[] {
   let options = [
     {
@@ -74,7 +74,7 @@ export default function getGroupingSelectOptions({
       : options.concat(nameOption);
   }
 
-  if (sequenceName === 'images' || sequenceName === 'audios') {
+  if (sequenceName === 'images' || sequenceName === 'audios' || sequenceName === 'videos') {
     const recordOptions = [
       {
         group: 'record',
