@@ -104,13 +104,7 @@ const VideoBox = ({
       );
     }
     return (
-      <video
-        muted
-        autoPlay
-        loop
-        playsInline
-        style={thumbStyle}
-      >
+      <video muted autoPlay loop playsInline style={thumbStyle}>
         <source
           src={`data:${getMimeType(format)};base64,${blobData}`}
           type={getMimeType(format)}
