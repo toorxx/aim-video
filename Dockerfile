@@ -23,5 +23,5 @@ RUN AIM_UI_DIR=$(python3 -c "import aim_ui; import os; print(os.path.dirname(aim
     rm -rf /aim-ui-build && \
     echo "Installed custom UI to $AIM_UI_DIR/build"
 
-WORKDIR /opt/aim
+WORKDIR /aim
 CMD aim init || true && aim up --host 0.0.0.0
