@@ -2,7 +2,7 @@
 FROM node:18 AS ui-builder
 WORKDIR /ui
 COPY aim/web/ui/package.json aim/web/ui/yarn.lock* ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 COPY aim/web/ui/ ./
 RUN npx react-app-rewired --max_old_space_size=4096 build
 
