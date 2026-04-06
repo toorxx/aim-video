@@ -74,7 +74,11 @@ export default function getGroupingSelectOptions({
       : options.concat(nameOption);
   }
 
-  if (sequenceName === 'images' || sequenceName === 'audios' || sequenceName === 'videos') {
+  if (
+    sequenceName === 'images' ||
+    sequenceName === 'audios' ||
+    sequenceName === 'videos'
+  ) {
     const recordOptions = [
       {
         group: 'record',
