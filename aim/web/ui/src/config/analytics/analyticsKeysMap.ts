@@ -317,6 +317,11 @@ export const ANALYTICS_EVENT_KEYS = {
         clickUpdateButton: '[RunDetail] [Notes] Click update button',
         clickDeleteButton: '[RunDetail] [Notes] Click delete button',
       },
+      videos: {
+        tabView: '[RunDetail] [Videos] Tab view',
+        clickApplyButton: '[RunDetail] [Videos] Click apply button',
+        changeContext: '[RunDetail] [Videos] Change context',
+      },
       audios: {
         tabView: '[RunDetail] [Audios] Tab view',
         clickApplyButton: '[RunDetail] [Audios] Click apply button',
