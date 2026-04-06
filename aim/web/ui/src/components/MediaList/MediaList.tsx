@@ -61,7 +61,10 @@ function MediaList({
   const listHeight = React.useMemo(() => {
     const { maxWidth, maxHeight } = getBiggestImageFromList(data);
     const { alignmentType, mediaItemSize } = additionalProperties;
-    if (mediaType === MediaTypeEnum.IMAGE || mediaType === MediaTypeEnum.VIDEO) {
+    if (
+      mediaType === MediaTypeEnum.IMAGE ||
+      mediaType === MediaTypeEnum.VIDEO
+    ) {
       return MEDIA_LIST_HEIGHT[mediaType]({
         alignmentType,
         maxHeight,

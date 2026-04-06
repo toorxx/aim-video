@@ -142,7 +142,10 @@ const MediaSet = ({
       return 0;
     }
     if (items.length > 0) {
-      if (mediaType === MediaTypeEnum.IMAGE || mediaType === MediaTypeEnum.VIDEO) {
+      if (
+        mediaType === MediaTypeEnum.IMAGE ||
+        mediaType === MediaTypeEnum.VIDEO
+      ) {
         return MEDIA_SET_SIZE[mediaType]({
           maxHeight,
           maxWidth,
