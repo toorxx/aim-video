@@ -19,6 +19,7 @@ RUN AIM_UI_DIR=$(python3 -c "import aim_ui; import os; print(os.path.dirname(aim
 COPY --from=ui-builder /ui/build/ /aim-ui-build/
 RUN AIM_UI_DIR=$(python3 -c "import aim_ui; import os; print(os.path.dirname(aim_ui.__file__))") && \
     cp -r /aim-ui-build "$AIM_UI_DIR/build" && \
+    mv "$AIM_UI_DIR/build/index.html" "$AIM_UI_DIR/build/index-template.html" && \
     rm -rf /aim-ui-build && \
     echo "Installed custom UI to $AIM_UI_DIR/build"
 
