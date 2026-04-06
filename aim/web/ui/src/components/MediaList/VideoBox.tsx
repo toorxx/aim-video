@@ -82,27 +82,61 @@ const VideoBox = ({
     }
   };
 
-  const renderMedia = (
-    maxWidth: string | number,
-    maxHeight: string | number,
-    showControls?: boolean,
-  ) => {
+  const thumbWidth = style.width - 6;
+  const thumbHeight = mediaItemHeight - 40;
+
+  const renderThumbnail = () => {
     if (!blobData) return null;
+    const thumbStyle: React.CSSProperties = {
+      width: thumbWidth,
+      height: thumbHeight,
+      objectFit: 'contain' as const,
+      display: 'block',
+      backgroundColor: '#1a1a1a',
+    };
     if (isGif) {
       return (
         <img
           src={`data:image/gif;base64,${blobData}`}
           alt={data.caption}
-          style={{ maxWidth, maxHeight, display: 'block' }}
+          style={thumbStyle}
         />
       );
     }
     return (
       <video
-        controls={showControls !== false}
-        autoPlay={showControls !== false}
-        style={{ maxWidth, maxHeight, display: 'block' }}
+        muted
+        autoPlay
+        loop
+        playsInline
+        style={thumbStyle}
       >
+        <source
+          src={`data:${getMimeType(format)};base64,${blobData}`}
+          type={getMimeType(format)}
+        />
+      </video>
+    );
+  };
+
+  const renderFullView = () => {
+    if (!blobData) return null;
+    const fullStyle: React.CSSProperties = {
+      maxWidth: '85vw',
+      maxHeight: '80vh',
+      display: 'block',
+    };
+    if (isGif) {
+      return (
+        <img
+          src={`data:image/gif;base64,${blobData}`}
+          alt={data.caption}
+          style={fullStyle}
+        />
+      );
+    }
+    return (
+      <video controls autoPlay style={fullStyle}>
         <source
           src={`data:${getMimeType(format)};base64,${blobData}`}
           type={getMimeType(format)}
@@ -129,7 +163,7 @@ const VideoBox = ({
             style={{ cursor: blobData ? 'pointer' : 'default' }}
           >
             {blobData ? (
-              renderMedia('100%', mediaItemHeight - 40, false)
+              renderThumbnail()
             ) : (
               <Skeleton
                 variant='rect'
@@ -178,7 +212,7 @@ const VideoBox = ({
               gap: '8px',
             }}
           >
-            {renderMedia('85vw', '80vh', true)}
+            {renderFullView()}
             {data.caption && (
               <Text
                 style={{ color: '#ccc', textAlign: 'center' }}
