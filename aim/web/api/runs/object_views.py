@@ -1,6 +1,6 @@
 from typing import Dict, List, Optional
 
-from aim import Audios, Distributions, Figures, Images, Texts
+from aim import Audios, Distributions, Figures, Images, Texts, Videos
 from aim.sdk.sequence import Sequence
 from aim.sdk.sequence_collection import QuerySequenceCollection
 from aim.sdk.types import QueryReportMode
@@ -16,6 +16,7 @@ from aim.web.api.runs.pydantic_models import (
     RunTracesBatchApiIn,
     TextList,
     URIBatchIn,
+    VideoList,
 )
 from aim.web.api.runs.utils import (
     checked_query,
@@ -180,3 +181,9 @@ class FigureApiConfig(CustomObjectApiConfig):
     resolve_blobs = True
     dump_record_fn = lambda x: x.data  # noqa: E731
     model = FigureInfo
+
+
+class VideoApiConfig(CustomObjectApiConfig):
+    sequence_type = Videos
+    resolve_blobs = False
+    model = VideoList

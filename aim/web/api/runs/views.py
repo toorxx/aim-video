@@ -7,6 +7,7 @@ from aim.web.api.runs.object_views import (
     FigureApiConfig,
     ImageApiConfig,
     TextApiConfig,
+    VideoApiConfig,
 )
 from aim.web.api.runs.pydantic_models import (
     MetricAlignApiIn,
@@ -375,3 +376,4 @@ def add_api_routes():
     DistributionApiConfig.register_endpoints(runs_router)
     AudioApiConfig.register_endpoints(runs_router)
     FigureApiConfig.register_endpoints(runs_router)
+    VideoApiConfig.register_endpoints(runs_router)

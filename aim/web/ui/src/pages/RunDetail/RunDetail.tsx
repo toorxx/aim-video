@@ -91,6 +91,7 @@ const tabs: Record<string, string> = {
   distributions: 'Distributions',
   images: 'Images',
   audios: 'Audios',
+  videos: 'Videos',
   texts: 'Texts',
   figures: 'Figures',
   settings: 'Settings',
@@ -187,6 +188,14 @@ function RunDetail(): React.FunctionComponentElement<React.ReactNode> {
       <TraceVisualizationContainer
         runHash={runHash}
         traceType='audios'
+        traceInfo={runData?.runTraces}
+        runParams={runData?.runParams}
+      />
+    ),
+    videos: (
+      <TraceVisualizationContainer
+        runHash={runHash}
+        traceType='videos'
         traceInfo={runData?.runTraces}
         runParams={runData?.runParams}
       />

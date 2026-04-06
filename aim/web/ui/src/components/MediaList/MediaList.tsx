@@ -13,11 +13,13 @@ import {
 import getBiggestImageFromList from 'utils/getBiggestImageFromList';
 
 import ImageBox from './ImageBox';
+import VideoBox from './VideoBox';
 import { IMediaListProps } from './MediaList.d';
 
 const mediaBoxType: any = {
   [MediaTypeEnum.IMAGE]: ImageBox,
   [MediaTypeEnum.AUDIO]: AudioBox,
+  [MediaTypeEnum.VIDEO]: VideoBox,
 };
 
 function MediaList({
@@ -59,7 +61,7 @@ function MediaList({
   const listHeight = React.useMemo(() => {
     const { maxWidth, maxHeight } = getBiggestImageFromList(data);
     const { alignmentType, mediaItemSize } = additionalProperties;
-    if (mediaType === MediaTypeEnum.IMAGE) {
+    if (mediaType === MediaTypeEnum.IMAGE || mediaType === MediaTypeEnum.VIDEO) {
       return MEDIA_LIST_HEIGHT[mediaType]({
         alignmentType,
         maxHeight,

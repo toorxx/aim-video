@@ -385,6 +385,63 @@ export function processAudiosData(
   };
 }
 
+export function processVideosData(
+  data: Partial<ImagesData>,
+  params?: { [key: string]: unknown },
+) {
+  const {
+    record_range_total,
+    iters,
+    values,
+    index_range_total,
+    context,
+    name,
+  } = data;
+  const groupingSelectOptions = params
+    ? getGroupingSelectOptions({
+        params: getObjectPaths(params, params),
+        sequenceName: 'videos',
+      })
+    : [];
+  let videosSetData: any[] = [];
+
+  values?.forEach((stepData: IImageData[], stepIndex: number) => {
+    stepData.forEach((video: IImageData) => {
+      const videoKey = encode({
+        name,
+        traceContext: context,
+        index: video.index,
+        step: iters?.[stepIndex],
+        caption: video.caption,
+      });
+      const seqKey = encode({
+        name,
+        traceContext: context,
+      });
+      videosSetData.push({
+        ...video,
+        video_name: name,
+        step: iters?.[stepIndex],
+        context: context,
+        key: videoKey,
+        seqKey: seqKey,
+      });
+    });
+  });
+  const { mediaSetData, orderedMap } = getDataAsMediaSetNestedObject({
+    data: groupData(_.orderBy(videosSetData)),
+    groupingSelectOptions,
+    defaultGroupFields: ['step'],
+  });
+  return {
+    videosSetData: mediaSetData,
+    orderedMap,
+    record_range: [record_range_total?.[0], (record_range_total?.[1] || 0) - 1],
+    index_range: [index_range_total?.[0], (index_range_total?.[1] || 0) - 1],
+    processedDataType: VisualizationMenuTitles.videos,
+  };
+}
+
 function groupData(data: IProcessedImageData[]): {
   key: string;
   config: { [key: string]: string };

@@ -119,14 +119,17 @@ export const IMAGE_ALIGNMENT_OPTIONS = [
 export const MEDIA_ITEMS_SIZES = {
   [MediaTypeEnum.AUDIO]: getAudioBoxSize,
   [MediaTypeEnum.IMAGE]: getImageBoxSize,
+  [MediaTypeEnum.VIDEO]: getImageBoxSize,
 };
 
 export const MEDIA_SET_SIZE = {
   [MediaTypeEnum.AUDIO]: getAudioMediaSetSize,
   [MediaTypeEnum.IMAGE]: getImageMediaSetSize,
+  [MediaTypeEnum.VIDEO]: getImageMediaSetSize,
 };
 
 export const MEDIA_LIST_HEIGHT = {
   [MediaTypeEnum.AUDIO]: getAudioMediaListHeight,
   [MediaTypeEnum.IMAGE]: getImageMediaListHeight,
+  [MediaTypeEnum.VIDEO]: getImageMediaListHeight,
 };

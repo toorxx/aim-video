@@ -150,3 +150,33 @@
     }
   }
 }
+
+.VideoBox {
+  height: 100%;
+  position: absolute;
+  &__content {
+    height: 100%;
+    width: 100%;
+    position: relative;
+  }
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: calc(100% - 0.25rem);
+    height: 100%;
+    video, img {
+      max-width: 100%;
+      max-height: calc(100% - 1.5rem);
+      object-fit: contain;
+    }
+    & > span {
+      height: 1rem;
+      margin-top: 0.125rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}

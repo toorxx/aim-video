@@ -238,3 +238,13 @@ class NoteIn(BaseModel):
 ImageList = List[ImageInfo]
 TextList = List[TextInfo]
 AudioList = List[AudioInfo]
+
+
+class VideoInfo(BaseModel):
+    caption: str
+    format: str
+    blob_uri: str
+    index: int
+
+
+VideoList = List[VideoInfo]
