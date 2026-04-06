@@ -2,6 +2,8 @@ import React from 'react';
 import classNames from 'classnames';
 
 import { Skeleton } from '@material-ui/lab';
+import { Dialog, IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { Text } from 'components/kit';
 import ErrorBoundary from 'components/ErrorBoundary/ErrorBoundary';
@@ -21,6 +23,7 @@ const VideoBox = ({
   additionalProperties,
 }: any): React.FunctionComponentElement<React.ReactNode> => {
   const { format, blob_uri } = data;
+  const [isFullViewOpen, setIsFullViewOpen] = React.useState<boolean>(false);
   let [blobData, setBlobData] = React.useState<string>(
     blobsURIModel.getState()[blob_uri] ?? null,
   );
@@ -73,6 +76,41 @@ const VideoBox = ({
 
   const isGif = format === 'gif';
 
+  const handleClick = () => {
+    if (blobData) {
+      setIsFullViewOpen(true);
+    }
+  };
+
+  const renderMedia = (
+    maxWidth: string | number,
+    maxHeight: string | number,
+    showControls?: boolean,
+  ) => {
+    if (!blobData) return null;
+    if (isGif) {
+      return (
+        <img
+          src={`data:image/gif;base64,${blobData}`}
+          alt={data.caption}
+          style={{ maxWidth, maxHeight, display: 'block' }}
+        />
+      );
+    }
+    return (
+      <video
+        controls={showControls !== false}
+        autoPlay={showControls !== false}
+        style={{ maxWidth, maxHeight, display: 'block' }}
+      >
+        <source
+          src={`data:${getMimeType(format)};base64,${blobData}`}
+          type={getMimeType(format)}
+        />
+      </video>
+    );
+  };
+
   return (
     <ErrorBoundary key={index}>
       <div className='VideoBox' style={style}>
@@ -85,25 +123,13 @@ const VideoBox = ({
           data-seqkey={`${data.seqKey}`}
           data-mediasetitem='mediaSetItem'
         >
-          <div className='VideoBox__wrapper'>
+          <div
+            className='VideoBox__wrapper'
+            onClick={handleClick}
+            style={{ cursor: blobData ? 'pointer' : 'default' }}
+          >
             {blobData ? (
-              isGif ? (
-                <img
-                  src={`data:image/gif;base64,${blobData}`}
-                  alt={data.caption}
-                  style={{ maxWidth: '100%', maxHeight: mediaItemHeight - 40 }}
-                />
-              ) : (
-                <video
-                  controls
-                  style={{ maxWidth: '100%', maxHeight: mediaItemHeight - 40 }}
-                >
-                  <source
-                    src={`data:${getMimeType(format)};base64,${blobData}`}
-                    type={getMimeType(format)}
-                  />
-                </video>
-              )
+              renderMedia('100%', mediaItemHeight - 40, false)
             ) : (
               <Skeleton
                 variant='rect'
@@ -117,6 +143,54 @@ const VideoBox = ({
           </div>
         </div>
       </div>
+      <ErrorBoundary>
+        <Dialog
+          onClose={() => setIsFullViewOpen(false)}
+          open={isFullViewOpen}
+          maxWidth={false}
+          PaperProps={{
+            style: {
+              backgroundColor: '#1a1a1a',
+              padding: '16px',
+              position: 'relative',
+              maxWidth: '90vw',
+              maxHeight: '90vh',
+            },
+          }}
+        >
+          <IconButton
+            onClick={() => setIsFullViewOpen(false)}
+            style={{
+              position: 'absolute',
+              top: 4,
+              right: 4,
+              color: '#fff',
+              zIndex: 1,
+            }}
+          >
+            <CloseIcon />
+          </IconButton>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+          >
+            {renderMedia('85vw', '80vh', true)}
+            {data.caption && (
+              <Text
+                style={{ color: '#ccc', textAlign: 'center' }}
+                size={12}
+                weight={400}
+              >
+                {data.caption}
+              </Text>
+            )}
+          </div>
+        </Dialog>
+      </ErrorBoundary>
     </ErrorBoundary>
   );
 };
