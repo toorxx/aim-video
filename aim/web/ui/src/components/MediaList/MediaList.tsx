@@ -74,7 +74,7 @@ function MediaList({
     const { maxWidth, maxHeight } = getBiggestImageFromList(data);
     const { alignmentType, mediaItemSize } = additionalProperties;
     if (mediaType === MediaTypeEnum.IMAGE) {
-      return MEDIA_LIST_HEIGHT[mediaType]({
+      return MEDIA_LIST_HEIGHT[MediaTypeEnum.IMAGE]({
         alignmentType,
         maxHeight,
         maxWidth,
@@ -83,7 +83,7 @@ function MediaList({
         mediaItemHeight,
       });
     } else {
-      return MEDIA_LIST_HEIGHT[mediaType](mediaItemHeight);
+      return MEDIA_LIST_HEIGHT[MediaTypeEnum.AUDIO](mediaItemHeight);
     }
   }, [
     additionalProperties,
