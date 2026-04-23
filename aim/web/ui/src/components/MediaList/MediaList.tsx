@@ -22,6 +22,9 @@ const mediaBoxType: any = {
   [MediaTypeEnum.VIDEO]: VideoBox,
 };
 
+const VIDEO_GRID_ITEM_WIDTH = 240;
+const VIDEO_GRID_ITEM_HEIGHT = 200;
+
 function MediaList({
   data,
   wrapperOffsetWidth,
@@ -35,6 +38,45 @@ function MediaList({
   selectOptions,
   onRunsTagsChange,
 }: IMediaListProps): React.FunctionComponentElement<React.ReactNode> {
+  // For VIDEO type, render a CSS grid instead of a horizontal list
+  if (mediaType === MediaTypeEnum.VIDEO) {
+    return (
+      <ErrorBoundary>
+        <div
+          className='MediaList__videoGrid'
+          style={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(auto-fill, minmax(${VIDEO_GRID_ITEM_WIDTH}px, 1fr))`,
+            gap: '8px',
+            width: '100%',
+            padding: '4px',
+          }}
+        >
+          {data.map((item: any, index: number) => (
+            <ErrorBoundary key={index}>
+              <VideoBox
+                index={index}
+                style={{
+                  position: 'relative',
+                  width: '100%',
+                  height: VIDEO_GRID_ITEM_HEIGHT,
+                }}
+                data={item}
+                addUriToList={addUriToList}
+                mediaItemHeight={VIDEO_GRID_ITEM_HEIGHT}
+                focusedState={focusedState}
+                additionalProperties={additionalProperties}
+                tooltip={tooltip}
+                selectOptions={selectOptions}
+                onRunsTagsChange={onRunsTagsChange}
+              />
+            </ErrorBoundary>
+          ))}
+        </div>
+      </ErrorBoundary>
+    );
+  }
+
   const itemSize = React.useCallback(
     (index: number) => {
       if (mediaType === MediaTypeEnum.AUDIO) {

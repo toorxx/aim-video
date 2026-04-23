@@ -153,7 +153,6 @@
 
 .VideoBox {
   height: 100%;
-  position: absolute;
   &__content {
     height: 100%;
     width: 100%;
@@ -164,7 +163,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: calc(100% - 0.25rem);
+    width: 100%;
     height: 100%;
     video, img {
       max-width: 100%;
@@ -177,6 +176,8 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      width: 100%;
+      text-align: center;
     }
   }
 }

@@ -142,10 +142,25 @@ const MediaSet = ({
       return 0;
     }
     if (items.length > 0) {
-      if (
-        mediaType === MediaTypeEnum.IMAGE ||
-        mediaType === MediaTypeEnum.VIDEO
-      ) {
+      if (mediaType === MediaTypeEnum.VIDEO) {
+        // Grid layout: calculate rows based on items count and container width
+        const gridItemWidth = 240;
+        const gridItemHeight = 200;
+        const gridGap = 8;
+        const cols = Math.max(
+          1,
+          Math.floor((wrapperOffsetWidth + gridGap) / (gridItemWidth + gridGap)),
+        );
+        const flatItems = items.flat();
+        const rows = Math.ceil(flatItems.length / cols);
+        return (
+          rows * (gridItemHeight + gridGap) +
+          MEDIA_SET_TITLE_HEIGHT +
+          MEDIA_SET_WRAPPER_PADDING_HEIGHT +
+          (isStackedPath && pathValue.length > 1 ? MEDIA_SET_SLIDER_HEIGHT : 0)
+        );
+      }
+      if (mediaType === MediaTypeEnum.IMAGE) {
         return MEDIA_SET_SIZE[mediaType]({
           maxHeight,
           maxWidth,
