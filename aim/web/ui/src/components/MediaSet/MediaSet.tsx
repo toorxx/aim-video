@@ -149,7 +149,9 @@ const MediaSet = ({
         const gridGap = 8;
         const cols = Math.max(
           1,
-          Math.floor((wrapperOffsetWidth + gridGap) / (gridItemWidth + gridGap)),
+          Math.floor(
+            (wrapperOffsetWidth + gridGap) / (gridItemWidth + gridGap),
+          ),
         );
         const flatItems = items.flat();
         const rows = Math.ceil(flatItems.length / cols);

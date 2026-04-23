@@ -38,8 +38,63 @@ function MediaList({
   selectOptions,
   onRunsTagsChange,
 }: IMediaListProps): React.FunctionComponentElement<React.ReactNode> {
-  // For VIDEO type, render a CSS grid instead of a horizontal list
-  if (mediaType === MediaTypeEnum.VIDEO) {
+  const isVideo = mediaType === MediaTypeEnum.VIDEO;
+
+  const itemSize = React.useCallback(
+    (index: number) => {
+      if (isVideo) {
+        return 0;
+      }
+      if (mediaType === MediaTypeEnum.AUDIO) {
+        return MEDIA_ITEMS_SIZES[mediaType]().width;
+      } else {
+        return MEDIA_ITEMS_SIZES[mediaType]({
+          data,
+          index,
+          additionalProperties,
+          wrapperOffsetWidth,
+          wrapperOffsetHeight,
+        }).width;
+      }
+    },
+    [
+      additionalProperties,
+      data,
+      isVideo,
+      mediaType,
+      wrapperOffsetHeight,
+      wrapperOffsetWidth,
+    ],
+  );
+
+  const listHeight = React.useMemo(() => {
+    if (isVideo) {
+      return 0;
+    }
+    const { maxWidth, maxHeight } = getBiggestImageFromList(data);
+    const { alignmentType, mediaItemSize } = additionalProperties;
+    if (mediaType === MediaTypeEnum.IMAGE) {
+      return MEDIA_LIST_HEIGHT[mediaType]({
+        alignmentType,
+        maxHeight,
+        maxWidth,
+        wrapperOffsetWidth,
+        mediaItemSize,
+        mediaItemHeight,
+      });
+    } else {
+      return MEDIA_LIST_HEIGHT[mediaType](mediaItemHeight);
+    }
+  }, [
+    additionalProperties,
+    data,
+    isVideo,
+    mediaItemHeight,
+    mediaType,
+    wrapperOffsetWidth,
+  ]);
+
+  if (isVideo) {
     return (
       <ErrorBoundary>
         <div
@@ -76,55 +131,6 @@ function MediaList({
       </ErrorBoundary>
     );
   }
-
-  const itemSize = React.useCallback(
-    (index: number) => {
-      if (mediaType === MediaTypeEnum.AUDIO) {
-        return MEDIA_ITEMS_SIZES[mediaType]().width;
-      } else {
-        return MEDIA_ITEMS_SIZES[mediaType]({
-          data,
-          index,
-          additionalProperties,
-          wrapperOffsetWidth,
-          wrapperOffsetHeight,
-        }).width;
-      }
-    },
-    [
-      additionalProperties,
-      data,
-      mediaType,
-      wrapperOffsetHeight,
-      wrapperOffsetWidth,
-    ],
-  );
-
-  const listHeight = React.useMemo(() => {
-    const { maxWidth, maxHeight } = getBiggestImageFromList(data);
-    const { alignmentType, mediaItemSize } = additionalProperties;
-    if (
-      mediaType === MediaTypeEnum.IMAGE ||
-      mediaType === MediaTypeEnum.VIDEO
-    ) {
-      return MEDIA_LIST_HEIGHT[mediaType]({
-        alignmentType,
-        maxHeight,
-        maxWidth,
-        wrapperOffsetWidth,
-        mediaItemSize,
-        mediaItemHeight,
-      });
-    } else {
-      return MEDIA_LIST_HEIGHT[mediaType](mediaItemHeight);
-    }
-  }, [
-    additionalProperties,
-    data,
-    mediaItemHeight,
-    mediaType,
-    wrapperOffsetWidth,
-  ]);
 
   return (
     <ErrorBoundary>
