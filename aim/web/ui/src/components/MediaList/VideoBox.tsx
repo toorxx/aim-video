@@ -96,7 +96,7 @@ const VideoBox = ({
     };
     if (isGif) {
       return (
-        <GifLooper
+        <img
           src={`data:image/gif;base64,${blobData}`}
           alt={data.caption}
           style={thumbStyle}
@@ -221,78 +221,6 @@ const VideoBox = ({
       </ErrorBoundary>
     </ErrorBoundary>
   );
-};
-
-/**
- * GifLooper: forces a GIF to loop by re-assigning src when animation ends.
- * Detects end-of-animation by polling the image's naturalWidth after a delay.
- * Uses a simpler approach: just re-set the src on an interval matching
- * approximate GIF duration to force restart.
- */
-const GifLooper = ({ src, alt, style }: any) => {
-  const imgRef = React.useRef<HTMLImageElement>(null);
-
-  React.useEffect(() => {
-    // Force loop by re-setting src periodically
-    // We detect "end" by using a canvas to count frames would be complex,
-    // so we use a simpler approach: create an offscreen image, detect when
-    // the GIF has loaded, then periodically re-trigger it.
-    const img = imgRef.current;
-    if (!img) return;
-
-    // Re-assign src to restart the GIF animation every N seconds
-    // We estimate duration: most training GIFs are 2-10s
-    // A more robust approach: use requestAnimationFrame to detect stale frames
-    let lastDataUrl = src;
-    let rafId: number;
-    let canvas: HTMLCanvasElement | null = null;
-    let ctx: CanvasRenderingContext2D | null = null;
-    let lastPixelData = '';
-    let staleCount = 0;
-
-    canvas = document.createElement('canvas');
-    canvas.width = 1;
-    canvas.height = 1;
-    ctx = canvas.getContext('2d');
-
-    const checkStale = () => {
-      if (!img || !ctx) return;
-      try {
-        ctx.drawImage(img, 0, 0, 1, 1);
-        const pixel = ctx.getImageData(0, 0, 1, 1).data.toString();
-        if (pixel === lastPixelData) {
-          staleCount++;
-          if (staleCount > 10) {
-            // GIF likely stopped, restart it
-            const tmp = img.src;
-            img.src = '';
-            img.src = tmp;
-            staleCount = 0;
-          }
-        } else {
-          staleCount = 0;
-          lastPixelData = pixel;
-        }
-      } catch (e) {
-        // ignore cross-origin or other errors
-      }
-      rafId = requestAnimationFrame(checkStale);
-    };
-
-    // Start checking after a short delay to let GIF begin playing
-    const timeoutId = window.setTimeout(() => {
-      rafId = requestAnimationFrame(checkStale);
-    }, 500);
-
-    return () => {
-      clearTimeout(timeoutId);
-      if (rafId) cancelAnimationFrame(rafId);
-      canvas = null;
-      ctx = null;
-    };
-  }, [src]);
-
-  return <img ref={imgRef} src={src} alt={alt} style={style} />;
 };
 
 export default VideoBox;
