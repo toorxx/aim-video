@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import { Tooltip } from '@material-ui/core';
 
 import MediaList from 'components/MediaList';
+import VideoBox from 'components/MediaList/VideoBox';
 import { JsonViewPopover } from 'components/kit';
 import ControlPopover from 'components/ControlPopover/ControlPopover';
 import { MediaTypeEnum } from 'components/MediaPanel/config';
@@ -215,6 +216,79 @@ const MediaSet = ({
       setDepthMap(Array(content.length).fill(0));
     }
   }, [additionalProperties.stacking, data, content.length]);
+
+  // For VIDEO: render a flat 3-column grid with all items across all groups
+  if (mediaType === MediaTypeEnum.VIDEO) {
+    const VIDEO_GRID_COLS = 3;
+    const gridGap = 8;
+    const gridPadding = 4;
+    const cellWidth = Math.floor(
+      (wrapperOffsetWidth - 2 * gridPadding - (VIDEO_GRID_COLS - 1) * gridGap) /
+        VIDEO_GRID_COLS,
+    );
+    const cellHeight = Math.floor(cellWidth * 0.75) + 40; // 4:3 ratio + caption
+
+    // Flatten all content items with their step labels
+    const flatItems: { item: any; label: string }[] = [];
+    for (const [path, items] of content) {
+      if (path.length <= 1 || items.length === 0) continue;
+      const lastPath = path[path.length - 1];
+      const label =
+        typeof lastPath === 'string'
+          ? lastPath.split(' = ').pop()?.trim() || ''
+          : '';
+      const flat = items.flat();
+      for (const item of flat) {
+        flatItems.push({ item, label: `step ${label}` });
+      }
+    }
+
+    return (
+      <ErrorBoundary>
+        <div
+          style={{
+            height: wrapperOffsetHeight || 0,
+            width: '100%',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+          }}
+          onScroll={onListScroll as any}
+        >
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: `repeat(${VIDEO_GRID_COLS}, 1fr)`,
+              gap: `${gridGap}px`,
+              padding: `${gridPadding}px`,
+            }}
+          >
+            {flatItems.map(({ item, label }, i) => (
+              <ErrorBoundary key={i}>
+                <div style={{ position: 'relative' }}>
+                  <VideoBox
+                    index={i}
+                    style={{
+                      position: 'relative',
+                      width: cellWidth,
+                      height: cellHeight,
+                    }}
+                    data={item}
+                    addUriToList={addUriToList}
+                    mediaItemHeight={cellHeight}
+                    focusedState={focusedState}
+                    additionalProperties={additionalProperties}
+                    tooltip={tooltip}
+                    selectOptions={selectOptions}
+                    onRunsTagsChange={onRunsTagsChange}
+                  />
+                </div>
+              </ErrorBoundary>
+            ))}
+          </div>
+        </div>
+      </ErrorBoundary>
+    );
+  }
 
   return (
     <ErrorBoundary>

@@ -22,9 +22,6 @@ const mediaBoxType: any = {
   [MediaTypeEnum.VIDEO]: VideoBox,
 };
 
-const VIDEO_GRID_ITEM_WIDTH = 240;
-const VIDEO_GRID_ITEM_HEIGHT = 200;
-
 function MediaList({
   data,
   wrapperOffsetWidth,
@@ -38,13 +35,8 @@ function MediaList({
   selectOptions,
   onRunsTagsChange,
 }: IMediaListProps): React.FunctionComponentElement<React.ReactNode> {
-  const isVideo = mediaType === MediaTypeEnum.VIDEO;
-
   const itemSize = React.useCallback(
     (index: number) => {
-      if (isVideo) {
-        return 0;
-      }
       if (mediaType === MediaTypeEnum.AUDIO) {
         return MEDIA_ITEMS_SIZES[mediaType]().width;
       } else {
@@ -60,7 +52,6 @@ function MediaList({
     [
       additionalProperties,
       data,
-      isVideo,
       mediaType,
       wrapperOffsetHeight,
       wrapperOffsetWidth,
@@ -68,13 +59,13 @@ function MediaList({
   );
 
   const listHeight = React.useMemo(() => {
-    if (isVideo) {
-      return 0;
-    }
     const { maxWidth, maxHeight } = getBiggestImageFromList(data);
     const { alignmentType, mediaItemSize } = additionalProperties;
-    if (mediaType === MediaTypeEnum.IMAGE) {
-      return MEDIA_LIST_HEIGHT[MediaTypeEnum.IMAGE]({
+    if (
+      mediaType === MediaTypeEnum.IMAGE ||
+      mediaType === MediaTypeEnum.VIDEO
+    ) {
+      return MEDIA_LIST_HEIGHT[mediaType]({
         alignmentType,
         maxHeight,
         maxWidth,
@@ -83,54 +74,15 @@ function MediaList({
         mediaItemHeight,
       });
     } else {
-      return MEDIA_LIST_HEIGHT[MediaTypeEnum.AUDIO](mediaItemHeight);
+      return MEDIA_LIST_HEIGHT[mediaType](mediaItemHeight);
     }
   }, [
     additionalProperties,
     data,
-    isVideo,
     mediaItemHeight,
     mediaType,
     wrapperOffsetWidth,
   ]);
-
-  if (isVideo) {
-    return (
-      <ErrorBoundary>
-        <div
-          className='MediaList__videoGrid'
-          style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(auto-fill, minmax(${VIDEO_GRID_ITEM_WIDTH}px, 1fr))`,
-            gap: '8px',
-            width: '100%',
-            padding: '4px',
-          }}
-        >
-          {data.map((item: any, index: number) => (
-            <ErrorBoundary key={index}>
-              <VideoBox
-                index={index}
-                style={{
-                  position: 'relative',
-                  width: '100%',
-                  height: VIDEO_GRID_ITEM_HEIGHT,
-                }}
-                data={item}
-                addUriToList={addUriToList}
-                mediaItemHeight={VIDEO_GRID_ITEM_HEIGHT}
-                focusedState={focusedState}
-                additionalProperties={additionalProperties}
-                tooltip={tooltip}
-                selectOptions={selectOptions}
-                onRunsTagsChange={onRunsTagsChange}
-              />
-            </ErrorBoundary>
-          ))}
-        </div>
-      </ErrorBoundary>
-    );
-  }
 
   return (
     <ErrorBoundary>
